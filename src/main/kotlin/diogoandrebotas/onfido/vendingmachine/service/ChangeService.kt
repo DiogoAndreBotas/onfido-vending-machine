@@ -14,6 +14,25 @@ class ChangeService(
 
     fun getChange(): List<Change> = changeRepository.findAll()
 
+    fun resetChange(): List<Change> {
+        val updatedChange = changeRepository.findAll().map {
+            when(it.coin) {
+                "£2" -> it.quantity = 5
+                "£1" -> it.quantity = 10
+                "50p" -> it.quantity = 20
+                "20p" -> it.quantity = 50
+                "10p" -> it.quantity = 100
+                "5p" -> it.quantity = 200
+                "2p" -> it.quantity = 500
+                "1p" -> it.quantity = 1000
+            }
+
+            it
+        }
+
+        return changeRepository.saveAll(updatedChange)
+    }
+
     fun calculateChange(value: Float): List<TempChangeStruct> {
         val pounds = floor(value).toInt()
         val pennies = floor((value - pounds) * 100).toInt()
@@ -25,7 +44,7 @@ class ChangeService(
     }
 
     // TODO: major possibility for refactor, but leave that more towards the end
-    fun calculateChangeFromPounds(pounds: Int): MutableMap<String, Int> {
+    private fun calculateChangeFromPounds(pounds: Int): MutableMap<String, Int> {
         var coinsMissing = pounds
         val changeToReturn = mutableMapOf<String, Int>()
 
@@ -75,7 +94,7 @@ class ChangeService(
         return changeToReturn
     }
 
-    fun calculateChangeFromPennies(pennies: Int, currentChange: MutableMap<String, Int>): Map<String, Int> {
+    private fun calculateChangeFromPennies(pennies: Int, currentChange: MutableMap<String, Int>): Map<String, Int> {
         var coinsMissing = pennies
 
         val fiftyPCoinsNeeded = coinsMissing / 50
