@@ -1,5 +1,6 @@
 package diogoandrebotas.onfido.vendingmachine.service
 
+import diogoandrebotas.onfido.vendingmachine.exception.MissingChangeException
 import diogoandrebotas.onfido.vendingmachine.model.Change
 import diogoandrebotas.onfido.vendingmachine.model.TempChangeStruct
 import diogoandrebotas.onfido.vendingmachine.repository.ChangeRepository
@@ -87,9 +88,7 @@ class ChangeService(
         changeToReturn[onePPair.get().first.coin] = onePPair.get().first.quantity
         coinsMissing -= onePPair.get().second
 
-        if (coinsMissing > 0) {
-            throw Exception("Not enough change")
-        }
+        if (coinsMissing > 0) throw MissingChangeException()
 
         return changeToReturn
     }
@@ -133,15 +132,14 @@ class ChangeService(
         currentChange["1p"] = (currOneCoins ?: 0) + onePPair.get().first.quantity
         coinsMissing -= onePPair.get().second
 
-        if (coinsMissing > 0) {
-            throw Exception("Not enough change")
-        }
+        if (coinsMissing > 0) throw MissingChangeException()
 
         return currentChange.filter { it.value != 0 }
     }
 
     private fun getAvailableCoins(coinsNeeded: Int, coin: String, divideBy: Float): Optional<Pair<TempChangeStruct, Int>> {
         val change = changeRepository.findById(coin).get()
+
         if (coinsNeeded > 0 && change.quantity > 0) {
             val quantity = if ((change.quantity - coinsNeeded) < 0) {
                 change.quantity

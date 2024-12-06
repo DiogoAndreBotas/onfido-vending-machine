@@ -44,7 +44,7 @@ class DataLoader(
             ),
             Product(
                 name = "Plant Based Protein Bar, Strawberry",
-                price = "£1.99",
+                price = "£1.85",
                 availableQuantity = 10
             ),
             Product(

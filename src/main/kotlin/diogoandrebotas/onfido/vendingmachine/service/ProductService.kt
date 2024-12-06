@@ -1,5 +1,10 @@
 package diogoandrebotas.onfido.vendingmachine.service
 
+import diogoandrebotas.onfido.vendingmachine.exception.NotEnoughMoneyProvidedException
+import diogoandrebotas.onfido.vendingmachine.exception.ProductNotFoundException
+import diogoandrebotas.onfido.vendingmachine.exception.ProductOutOfStockException
+import diogoandrebotas.onfido.vendingmachine.exception.UnrecognizedCoinException
+import diogoandrebotas.onfido.vendingmachine.model.Coin
 import diogoandrebotas.onfido.vendingmachine.model.Product
 import diogoandrebotas.onfido.vendingmachine.model.TempChangeStruct
 import diogoandrebotas.onfido.vendingmachine.model.http.CoinQuantity
@@ -14,14 +19,13 @@ class ProductService(
 
     fun getProducts(): List<Product> = productRepository.findAll()
 
-    fun getProduct(id: Long): Product = productRepository.findById(id).get()
+    fun getProduct(id: Long): Product = productRepository.findById(id).orElseThrow { ProductNotFoundException(id) }
 
     fun purchaseProduct(id: Long, coinQuantities: List<CoinQuantity>): Pair<Product, List<TempChangeStruct>> {
-        val product = getProduct(id)
+        validateCoins(coinQuantities.map { it.coin })
 
-        if (product.availableQuantity == 0) {
-            throw Exception("This product is out of stock")
-        }
+        val product = getProduct(id)
+        if (product.availableQuantity == 0) throw ProductOutOfStockException(product.name)
 
         // TODO: can be a reduce operation
         // TODO: probably can be a private method
@@ -51,7 +55,7 @@ class ProductService(
             return Pair(updatedProduct, change)
         }
         else {
-            throw Exception("not enough money")
+            throw NotEnoughMoneyProvidedException(productPrice, totalValue)
         }
     }
 
@@ -62,6 +66,16 @@ class ProductService(
         }
 
         return productRepository.saveAll(updatedProducts)
+    }
+
+    private fun validateCoins(coins: List<String>) {
+        val acceptedCoins = Coin.entries.map { it.coin }.toSet()
+
+        coins.forEach { coin ->
+            if (acceptedCoins.none { acceptedCoin -> acceptedCoin == coin }) {
+                throw UnrecognizedCoinException(coin)
+            }
+        }
     }
 
 }
