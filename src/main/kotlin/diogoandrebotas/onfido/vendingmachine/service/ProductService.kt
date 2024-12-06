@@ -55,4 +55,13 @@ class ProductService(
         }
     }
 
+    fun resetProductQuantities(): List<Product> {
+        val updatedProducts = productRepository.findAll().map {
+            it.availableQuantity = 10
+            it
+        }
+
+        return productRepository.saveAll(updatedProducts)
+    }
+
 }
