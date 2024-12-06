@@ -15,28 +15,24 @@ class DataLoader(
 
     @PostConstruct
     fun loadProducts() {
-//        if (productRepository.count() == 0L) {
-            val products = productList()
-            productRepository.saveAll(products)
-//        }
+        val products = productList()
+        productRepository.saveAll(products)
     }
 
     @PostConstruct
     fun loadChange() {
-//        if (changeRepository.count() == 0L) {
-            val coins = listOf(
-                Change("£2", 5),
-                Change("£1", 10),
-                Change("50p", 20),
-                Change("20p", 50),
-                Change("10p", 100),
-                Change("5p", 200),
-                Change("2p", 500),
-                Change("1p", 1000),
-            )
+        val coins = listOf(
+            Change("£2", 5),
+            Change("£1", 10),
+            Change("50p", 20),
+            Change("20p", 50),
+            Change("10p", 100),
+            Change("5p", 200),
+            Change("2p", 500),
+            Change("1p", 1000),
+        )
 
-            changeRepository.saveAll(coins)
-//        }
+        changeRepository.saveAll(coins)
     }
 
     private fun productList(): List<Product> {
