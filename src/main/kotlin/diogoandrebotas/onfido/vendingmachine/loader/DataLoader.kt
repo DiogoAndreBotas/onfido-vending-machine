@@ -15,27 +15,15 @@ class DataLoader(
 
     @PostConstruct
     fun loadProducts() {
-        val products = productList()
-        productRepository.saveAll(products)
+        productRepository.saveAll(products())
     }
 
     @PostConstruct
     fun loadChange() {
-        val coins = listOf(
-            Change("£2", 5),
-            Change("£1", 10),
-            Change("50p", 20),
-            Change("20p", 50),
-            Change("10p", 100),
-            Change("5p", 200),
-            Change("2p", 500),
-            Change("1p", 1000),
-        )
-
-        changeRepository.saveAll(coins)
+        changeRepository.saveAll(change())
     }
 
-    private fun productList(): List<Product> {
+    private fun products(): List<Product> {
         return listOf(
             Product(
                 name = "Plant Based Protein Bar, Caramel",
@@ -65,4 +53,16 @@ class DataLoader(
         )
     }
 
+    private fun change(): List<Change> {
+        return listOf(
+            Change("£2", 5),
+            Change("£1", 10),
+            Change("50p", 20),
+            Change("20p", 50),
+            Change("10p", 100),
+            Change("5p", 200),
+            Change("2p", 500),
+            Change("1p", 1000),
+        )
+    }
 }

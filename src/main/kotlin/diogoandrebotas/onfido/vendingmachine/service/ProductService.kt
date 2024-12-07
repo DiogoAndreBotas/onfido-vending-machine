@@ -45,7 +45,7 @@ class ProductService(
             return ProductAndChange(updatedProduct, change)
         }
         else {
-            throw NotEnoughMoneyProvidedException(productPrice, totalValue)
+            throw NotEnoughMoneyProvidedException(formatPrice(productPrice), formatPrice(totalValue))
         }
     }
 
@@ -79,5 +79,7 @@ class ProductService(
         product.availableQuantity -= 1
         return productRepository.save(product)
     }
+
+    private fun formatPrice(price: Double) = if (price >= 1) "£$price" else "${price.times(100).toInt()}p"
 
 }
