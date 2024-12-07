@@ -1,13 +1,11 @@
 FROM amazoncorretto:17 as build
-LABEL maintainer='DiogoAndreBotas'
+LABEL maintainer='Diogo André Botas'
 
-WORKDIR /workspace/app
-COPY . /workspace/app
-RUN ./gradlew assemble --no-daemon --stacktrace
+WORKDIR /src
+ADD . /src
+RUN ./gradlew clean assemble --no-daemon
 
 FROM amazoncorretto:17 as production
 WORKDIR /app
-VOLUME /tmp
-COPY --from=build /workspace/app/build/libs/vending-machine.jar /app/
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app/vending-machine.jar"]
+COPY --from=build /src/build/libs/*.jar .
+CMD exec java $JAVA_OPTS -jar *.jar
