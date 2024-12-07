@@ -3,7 +3,7 @@ LABEL maintainer='DiogoAndreBotas'
 
 WORKDIR /workspace/app
 COPY . /workspace/app
-RUN ./gradlew build --no-daemon
+RUN ./gradlew assemble --no-daemon --stacktrace
 
 FROM amazoncorretto:17 as production
 WORKDIR /app
