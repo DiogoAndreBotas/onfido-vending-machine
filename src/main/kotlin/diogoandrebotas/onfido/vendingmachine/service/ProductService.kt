@@ -10,6 +10,8 @@ import diogoandrebotas.onfido.vendingmachine.model.Product
 import diogoandrebotas.onfido.vendingmachine.model.ProductAndChange
 import diogoandrebotas.onfido.vendingmachine.repository.ProductRepository
 import org.springframework.stereotype.Service
+import kotlin.math.floor
+import kotlin.math.round
 
 @Service
 class ProductService(
@@ -36,13 +38,17 @@ class ProductService(
         if (totalValue >= productPrice) {
             val updatedProduct = decreaseProductQuantity(product)
 
-            val change = if ((totalValue - productPrice) > 0) {
-                changeService.calculateChange(totalValue - productPrice)
+            val change = totalValue - productPrice
+            val changeCoinQuantities = if (change > 0) {
+                val pounds = floor(change)
+                val pennies = round((change - pounds) * 100.0) / 100.0
+
+                changeService.calculateChange(pounds + pennies)
             } else {
                 emptyList()
             }
 
-            return ProductAndChange(updatedProduct, change)
+            return ProductAndChange(updatedProduct, changeCoinQuantities)
         }
         else {
             throw NotEnoughMoneyProvidedException(formatPrice(productPrice), formatPrice(totalValue))

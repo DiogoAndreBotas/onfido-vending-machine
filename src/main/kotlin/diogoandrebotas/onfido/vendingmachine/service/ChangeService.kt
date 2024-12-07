@@ -6,8 +6,7 @@ import diogoandrebotas.onfido.vendingmachine.model.Change
 import diogoandrebotas.onfido.vendingmachine.model.CoinQuantity
 import diogoandrebotas.onfido.vendingmachine.repository.ChangeRepository
 import org.springframework.stereotype.Service
-import kotlin.math.floor
-import kotlin.math.round
+import java.math.BigDecimal
 
 @Service
 class ChangeService(
@@ -36,19 +35,13 @@ class ChangeService(
     }
 
     fun calculateChange(value: Double): List<CoinQuantity> {
-        val pounds = floor(value).toInt()
-        val pennies = round((value - pounds) * 100).toInt()
-
-        if (pounds < 0 || pennies < 0) {
+        if (value < 0) {
             throw NoChangeForNegativeValuesException()
         } else if (hasEnoughChange(value)) {
             throw MissingChangeException()
         }
 
-        val changeFromPounds = retrieveCoins(pounds, getCoinsAndMultipliersForPounds())
-        val changeFromPennies = retrieveCoins(pennies, getCoinsAndMultipliersForPennies())
-
-        return mergeCoinQuantityLists(changeFromPounds, changeFromPennies)
+        return retrieveCoins(value, getCoinsAndMultipliers()).map { CoinQuantity(it.key, it.value) }
     }
 
     private fun hasEnoughChange(change: Double): Boolean {
@@ -63,21 +56,21 @@ class ChangeService(
         return totalChange < change
     }
 
-    private fun retrieveCoins(value: Int, coinsToConsider: List<Pair<String, Float>>): MutableMap<String, Int> {
+    private fun retrieveCoins(value: Double, coinsToConsider: List<Pair<String, Double>>): MutableMap<String, Int> {
         var coinsMissing = value
         val changeToReturn = mutableMapOf<String, Int>()
 
         coinsToConsider.forEach { (coin, multiplier) ->
-            if (coinsMissing == 0) return@forEach
+            if (coinsMissing == 0.0) return@forEach
 
-            val coinsNeeded = (coinsMissing / (1 / multiplier)).toInt()
+            val coinsNeeded = (BigDecimal(coinsMissing.toString()).divide(BigDecimal((1.0 / multiplier).toString()))).toInt()
             if (coinsNeeded == 0)  return@forEach
 
             val coinQuantity = getAvailableCoins(coinsNeeded, coin)
-            val quantityUpdated = (coinQuantity.quantity / multiplier).toInt()
+            val quantityUpdated = coinQuantity.quantity / multiplier
 
             changeToReturn[coinQuantity.coin] = coinQuantity.quantity
-            coinsMissing -= quantityUpdated
+            coinsMissing = (BigDecimal(coinsMissing.toString()) - BigDecimal(quantityUpdated.toString())).toDouble()
         }
 
         removeChange(changeToReturn)
@@ -99,33 +92,16 @@ class ChangeService(
         return CoinQuantity(coin, quantity)
     }
 
-    private fun getCoinsAndMultipliersForPounds() = mutableListOf(
-        Pair("£2", 0.5F),
-        Pair("£1", 1F),
-        Pair("50p", 2F),
-        Pair("20p", 5F),
-        Pair("10p", 10F),
-        Pair("5p", 20F),
-        Pair("2p", 50F),
-        Pair("1p", 100F)
+    private fun getCoinsAndMultipliers() = listOf(
+        Pair("£2", 0.5),
+        Pair("£1", 1.0),
+        Pair("50p", 2.0),
+        Pair("20p", 5.0),
+        Pair("10p", 10.0),
+        Pair("5p", 20.0),
+        Pair("2p", 50.0),
+        Pair("1p", 100.0)
     )
-
-    private fun getCoinsAndMultipliersForPennies() = mutableListOf(
-        Pair("50p", 0.02F),
-        Pair("20p", 0.05F),
-        Pair("10p", 0.1F),
-        Pair("5p", 0.2F),
-        Pair("2p", 0.5F),
-        Pair("1p", 1F)
-    )
-
-    private fun mergeCoinQuantityLists(changeFromPounds: Map<String, Int>, changeFromPennies: Map<String, Int>): List<CoinQuantity> {
-        return (changeFromPounds.toList() + changeFromPennies.toList())
-            .groupBy({ it.first }, { it.second })
-            .map { (key, values) -> key to values.sum() }
-            .filter { it.second != 0 }
-            .map { CoinQuantity(it.first, it.second) }
-    }
 
     private fun removeChange(coinQuantities: Map<String, Int>) {
         changeRepository.saveAll(
