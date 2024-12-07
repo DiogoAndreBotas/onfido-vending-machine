@@ -3,11 +3,11 @@ package diogoandrebotas.onfido.vendingmachine.service
 import diogoandrebotas.onfido.vendingmachine.exception.NotEnoughMoneyProvidedException
 import diogoandrebotas.onfido.vendingmachine.exception.ProductNotFoundException
 import diogoandrebotas.onfido.vendingmachine.exception.ProductOutOfStockException
-import diogoandrebotas.onfido.vendingmachine.exception.UnrecognizedCoinException
+import diogoandrebotas.onfido.vendingmachine.exception.CoinNotAcceptedException
 import diogoandrebotas.onfido.vendingmachine.model.Coin
+import diogoandrebotas.onfido.vendingmachine.model.CoinQuantity
 import diogoandrebotas.onfido.vendingmachine.model.Product
-import diogoandrebotas.onfido.vendingmachine.model.TempChangeStruct
-import diogoandrebotas.onfido.vendingmachine.model.http.CoinQuantity
+import diogoandrebotas.onfido.vendingmachine.model.ProductAndChange
 import diogoandrebotas.onfido.vendingmachine.repository.ProductRepository
 import org.springframework.stereotype.Service
 
@@ -21,36 +21,28 @@ class ProductService(
 
     fun getProduct(id: Long): Product = productRepository.findById(id).orElseThrow { ProductNotFoundException(id) }
 
-    fun purchaseProduct(id: Long, coinQuantities: List<CoinQuantity>): Pair<Product, List<TempChangeStruct>> {
+    fun purchaseProduct(id: Long, coinQuantities: List<CoinQuantity>): ProductAndChange {
         validateCoins(coinQuantities.map { it.coin })
 
         val product = getProduct(id)
         if (product.availableQuantity == 0) throw ProductOutOfStockException(product.name)
 
-        // TODO: can be a reduce operation
-        // TODO: probably can be a private method
         val totalValue = coinQuantities.sumOf {
-            if (it.coin.endsWith("p")) {
-                it.coin.removeSuffix("p").toDouble().div(100)
-            } else {
-                it.coin.removePrefix("£").toDouble()
-            }.times(it.quantity)
+            calculateCoinValue(it.coin).times(it.quantity)
         }
 
-        val productPrice = if (product.price.endsWith("p")) {
-            product.price.removeSuffix("p").toFloat().div(10)
-        } else {
-            product.price.removePrefix("£").toFloat()
-        }
+        val productPrice = calculateCoinValue(product.price)
+
         if (totalValue >= productPrice) {
-            product.availableQuantity -= 1
-            val updatedProduct = productRepository.save(product)
+            val updatedProduct = decreaseProductQuantity(product)
 
             val change = if ((totalValue - productPrice) > 0) {
                 changeService.calculateChange(totalValue - productPrice)
-            } else { emptyList() }
+            } else {
+                emptyList()
+            }
 
-            return Pair(updatedProduct, change)
+            return ProductAndChange(updatedProduct, change)
         }
         else {
             throw NotEnoughMoneyProvidedException(productPrice, totalValue)
@@ -58,12 +50,11 @@ class ProductService(
     }
 
     fun resetProductQuantities(): List<Product> {
-        val updatedProducts = productRepository.findAll().map {
-            it.availableQuantity = 10
-            it
-        }
+        val productsToUpdate = productRepository.findAll()
 
-        return productRepository.saveAll(updatedProducts)
+        productsToUpdate.forEach { it.availableQuantity = 10 }
+
+        return productRepository.saveAll(productsToUpdate)
     }
 
     private fun validateCoins(coins: List<String>) {
@@ -71,9 +62,22 @@ class ProductService(
 
         coins.forEach { coin ->
             if (acceptedCoins.none { acceptedCoin -> acceptedCoin == coin }) {
-                throw UnrecognizedCoinException(coin)
+                throw CoinNotAcceptedException(coin)
             }
         }
+    }
+
+    private fun calculateCoinValue(coin: String): Double {
+        return if (coin.endsWith("p")) {
+            coin.removeSuffix("p").toDouble().div(100)
+        } else {
+            coin.removePrefix("£").toDouble()
+        }
+    }
+
+    private fun decreaseProductQuantity(product: Product): Product {
+        product.availableQuantity -= 1
+        return productRepository.save(product)
     }
 
 }

@@ -1,6 +1,6 @@
 package diogoandrebotas.onfido.vendingmachine.model
 
-data class TempChangeStruct(
+data class CoinQuantity(
     val coin: String,
-    var quantity: Int
+    val quantity: Int
 )

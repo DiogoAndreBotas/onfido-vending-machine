@@ -20,8 +20,7 @@ class ProductController(
     @PostMapping("/{id}/purchase")
     fun purchaseProduct(@PathVariable id: Long, @RequestBody body: PurchaseRequestBody): ProductPurchaseResponseBody {
         val productAndChange = productService.purchaseProduct(id, body.coins)
-
-        return ProductPurchaseResponseBody(productAndChange.first, productAndChange.second)
+        return ProductPurchaseResponseBody(productAndChange.product, productAndChange.change)
     }
 
     @PostMapping("/reset")

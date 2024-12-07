@@ -54,7 +54,7 @@ class DataLoader(
             ),
             Product(
                 name = "Fanta Zero, Orange",
-                price = "£3",
+                price = "99p",
                 availableQuantity = 10
             ),
             Product(
