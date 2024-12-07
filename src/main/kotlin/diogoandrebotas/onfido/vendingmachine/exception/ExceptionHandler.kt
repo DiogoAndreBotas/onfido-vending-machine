@@ -30,6 +30,10 @@ class ExceptionHandler {
     fun handleProductOutOfStockException(exception: ProductOutOfStockException) =
         getResponseEntity(HttpStatus.CONFLICT, exception.message)
 
+    @ExceptionHandler(CoinNotAcceptedException::class)
+    fun handleCoinNotAcceptedException(exception: CoinNotAcceptedException) =
+        getResponseEntity(HttpStatus.BAD_REQUEST, exception.message)
+
     private fun getResponseEntity(httpStatus: HttpStatus, message: String?): ResponseEntity<ErrorResponseBody> =
         ResponseEntity
             .status(httpStatus)
