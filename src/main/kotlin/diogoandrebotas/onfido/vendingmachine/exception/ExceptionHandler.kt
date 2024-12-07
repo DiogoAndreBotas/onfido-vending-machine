@@ -34,6 +34,10 @@ class ExceptionHandler {
     fun handleCoinNotAcceptedException(exception: CoinNotAcceptedException) =
         getResponseEntity(HttpStatus.BAD_REQUEST, exception.message)
 
+    @ExceptionHandler(NoChangeForNegativeValuesException::class)
+    fun handleNoChangeForNegativeValuesException(exception: NoChangeForNegativeValuesException) =
+        getResponseEntity(HttpStatus.BAD_REQUEST, exception.message)
+
     private fun getResponseEntity(httpStatus: HttpStatus, message: String?): ResponseEntity<ErrorResponseBody> =
         ResponseEntity
             .status(httpStatus)

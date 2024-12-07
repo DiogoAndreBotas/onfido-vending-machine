@@ -1,6 +1,7 @@
 package diogoandrebotas.onfido.vendingmachine.service
 
 import diogoandrebotas.onfido.vendingmachine.exception.MissingChangeException
+import diogoandrebotas.onfido.vendingmachine.exception.NoChangeForNegativeValuesException
 import diogoandrebotas.onfido.vendingmachine.model.Change
 import diogoandrebotas.onfido.vendingmachine.model.CoinQuantity
 import diogoandrebotas.onfido.vendingmachine.repository.ChangeRepository
@@ -39,13 +40,17 @@ class ChangeService(
         val pounds = floor(value).toInt()
         val pennies = round((value - pounds) * 100).toInt()
 
+        if (pounds < 0 || pennies < 0) {
+            throw NoChangeForNegativeValuesException()
+        }
+
         val changeFromPounds = calculateChangeFromPounds(pounds)
         val changeFromPennies = calculateChangeFromPennies(pennies, changeFromPounds)
 
         return changeFromPennies.map { CoinQuantity(it.key, it.value) }
     }
 
-    // TODO: major possibility for refactor, but leave that more towards the end
+    // TODO: major possibility for refactor, join pounds and pennies logic together
     private fun calculateChangeFromPounds(pounds: Int): MutableMap<String, Int> {
         var coinsMissing = pounds
         val changeToReturn = mutableMapOf<String, Int>()
@@ -62,7 +67,10 @@ class ChangeService(
         ).forEach { (coin, multiplier) ->
             if (coinsMissing == 0) return@forEach
 
-            val coinQuantityAndQuantityUpdated = getAvailableCoins((coinsMissing / (1 / multiplier)).toInt(), coin, multiplier)
+            val coinsNeeded = (coinsMissing / (1 / multiplier)).toInt()
+            if (coinsNeeded == 0)  return@forEach
+
+            val coinQuantityAndQuantityUpdated = getAvailableCoins(coinsNeeded, coin, multiplier)
             changeToReturn[coinQuantityAndQuantityUpdated.get().first.coin] = coinQuantityAndQuantityUpdated.get().first.quantity
             coinsMissing -= coinQuantityAndQuantityUpdated.get().second
         }
@@ -86,7 +94,10 @@ class ChangeService(
         ).forEach { (coin, multiplier) ->
             if (coinsMissing == 0) return@forEach
 
-            val coinQuantityAndQuantityUpdated = getAvailableCoins((coinsMissing / (1 / multiplier)).toInt(), coin, multiplier)
+            val coinsNeeded = (coinsMissing / (1 / multiplier)).toInt()
+            if (coinsNeeded == 0)  return@forEach
+
+            val coinQuantityAndQuantityUpdated = getAvailableCoins(coinsNeeded, coin, multiplier)
             currentChange[coin] = (currentChange[coin] ?: 0) + coinQuantityAndQuantityUpdated.get().first.quantity
             coinsMissing -= coinQuantityAndQuantityUpdated.get().second
         }
@@ -98,6 +109,7 @@ class ChangeService(
     }
 
     private fun getAvailableCoins(coinsNeeded: Int, coin: String, divideBy: Float): Optional<Pair<CoinQuantity, Int>> {
+        // TODO: consider loading coins into an hashmap for faster access
         val change = changeRepository.findById(coin).get()
 
         if (coinsNeeded > 0 && change.quantity > 0) {
