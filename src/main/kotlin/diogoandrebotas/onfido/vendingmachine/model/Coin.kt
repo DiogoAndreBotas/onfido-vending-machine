@@ -1,6 +1,5 @@
 package diogoandrebotas.onfido.vendingmachine.model
 
-// TODO: find a way to use these
 enum class Coin(val coin: String) {
     ONE_PENNY("1p"),
     TWO_PENCE("2p"),

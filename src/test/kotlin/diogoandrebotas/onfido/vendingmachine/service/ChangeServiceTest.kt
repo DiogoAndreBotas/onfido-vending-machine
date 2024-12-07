@@ -63,7 +63,16 @@ class ChangeServiceTest {
             on { findById("5p") } doReturn Optional.of(Change("5p", 20))
             on { findById("2p") } doReturn Optional.of(Change("2p", 50))
             on { findById("1p") } doReturn Optional.of(Change("1p", 100))
-            on { save(any<Change>()) } doAnswer { it.getArgument(0) }
+            on { findAll() } doReturn listOf(
+                Change("£2", 1),
+                Change("£1", 2),
+                Change("50p", 2),
+                Change("20p", 5),
+                Change("10p", 10),
+                Change("5p", 20),
+                Change("2p", 50),
+                Change("1p", 100),
+            )
         }
 
         val change = ChangeService(changeRepository).calculateChange(10.00)
@@ -89,7 +98,12 @@ class ChangeServiceTest {
             on { findById("20p") } doReturn Optional.of(Change("20p", 2))
             on { findById("5p") } doReturn Optional.of(Change("5p", 20))
             on { findById("2p") } doReturn Optional.of(Change("2p", 50))
-            on { save(any<Change>()) } doAnswer { it.getArgument(0) }
+            on { findAll() } doReturn listOf(
+                Change("50p", 1),
+                Change("20p", 2),
+                Change("5p", 20),
+                Change("2p", 50),
+            )
         }
 
         val change = ChangeService(changeRepository).calculateChange(0.99)
@@ -115,7 +129,16 @@ class ChangeServiceTest {
             on { findById("5p") } doReturn Optional.of(Change("5p", 20))
             on { findById("2p") } doReturn Optional.of(Change("2p", 50))
             on { findById("1p") } doReturn Optional.of(Change("1p", 85))
-            on { save(any<Change>()) } doAnswer { it.getArgument(0) }
+            on { findAll() } doReturn listOf(
+                Change("£2", 45),
+                Change("£1", 4),
+                Change("50p", 2),
+                Change("20p", 5),
+                Change("10p", 10),
+                Change("5p", 20),
+                Change("2p", 50),
+                Change("1p", 85),
+            )
         }
 
         val change = ChangeService(changeRepository).calculateChange(99.85)
@@ -152,37 +175,14 @@ class ChangeServiceTest {
 
     @Test
     fun `calculateChange for positive infinity`() {
-        val changeRepository = mock<ChangeRepository> {
-            on { findById("£2") } doReturn Optional.of(Change("£2", 45))
-            on { findById("£1") } doReturn Optional.of(Change("£1", 4))
-            on { findById("50p") } doReturn Optional.of(Change("50p", 2))
-            on { findById("20p") } doReturn Optional.of(Change("20p", 5))
-            on { findById("10p") } doReturn Optional.of(Change("10p", 10))
-            on { findById("5p") } doReturn Optional.of(Change("5p", 20))
-            on { findById("2p") } doReturn Optional.of(Change("2p", 50))
-            on { findById("1p") } doReturn Optional.of(Change("1p", 85))
-            on { save(any<Change>()) } doAnswer { it.getArgument(0) }
-        }
-
-        val changeService = ChangeService(changeRepository)
+        val changeService = ChangeService(mock<ChangeRepository>())
 
         assertThrows<MissingChangeException> { changeService.calculateChange(Double.POSITIVE_INFINITY) }
     }
 
     @Test
     fun `calculateChange throws an exception if there isn't enough change`() {
-        val changeRepository = mock<ChangeRepository> {
-            on { findById("£2") } doReturn Optional.of(Change("£2", 45))
-            on { findById("£1") } doReturn Optional.of(Change("£1", 0))
-            on { findById("50p") } doReturn Optional.of(Change("50p", 0))
-            on { findById("20p") } doReturn Optional.of(Change("20p", 0))
-            on { findById("10p") } doReturn Optional.of(Change("10p", 0))
-            on { findById("5p") } doReturn Optional.of(Change("5p", 0))
-            on { findById("2p") } doReturn Optional.of(Change("2p", 0))
-            on { findById("1p") } doReturn Optional.of(Change("1p", 0))
-        }
-
-        val changeService = ChangeService(changeRepository)
+        val changeService = ChangeService(mock<ChangeRepository>())
 
         assertThrows<MissingChangeException> { changeService.calculateChange(100.00) }
     }
