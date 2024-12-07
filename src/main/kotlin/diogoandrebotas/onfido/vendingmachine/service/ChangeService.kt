@@ -7,6 +7,7 @@ import diogoandrebotas.onfido.vendingmachine.repository.ChangeRepository
 import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.math.floor
+import kotlin.math.round
 
 @Service
 class ChangeService(
@@ -34,9 +35,9 @@ class ChangeService(
         return changeRepository.saveAll(updatedChange)
     }
 
-    fun calculateChange(value: Float): List<TempChangeStruct> {
+    fun calculateChange(value: Double): List<CoinQuantity> {
         val pounds = floor(value).toInt()
-        val pennies = floor((value - pounds) * 100).toInt()
+        val pennies = round((value - pounds) * 100).toInt()
 
         val changeFromPounds = calculateChangeFromPounds(pounds)
         val changeFromPennies = calculateChangeFromPennies(pennies, changeFromPounds)

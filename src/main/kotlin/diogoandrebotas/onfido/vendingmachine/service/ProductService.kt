@@ -29,15 +29,13 @@ class ProductService(
 
         // TODO: can be a reduce operation
         // TODO: probably can be a private method
-        val totalValue = coinQuantities.map {
-            val coinValue = if (it.coin.endsWith("p")) {
-                it.coin.removeSuffix("p").toFloat().div(100)
+        val totalValue = coinQuantities.sumOf {
+            if (it.coin.endsWith("p")) {
+                it.coin.removeSuffix("p").toDouble().div(100)
             } else {
-                it.coin.removePrefix("£").toFloat()
-            }
-
-            coinValue.times(it.quantity)
-        }.sum()
+                it.coin.removePrefix("£").toDouble()
+            }.times(it.quantity)
+        }
 
         val productPrice = if (product.price.endsWith("p")) {
             product.price.removeSuffix("p").toFloat().div(10)
