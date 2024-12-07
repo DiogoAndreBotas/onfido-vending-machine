@@ -144,24 +144,6 @@ class ChangeServiceTest {
     }
 
     @Test
-    fun `calculateChange throws an exception if there isn't enough change`() {
-        val changeRepository = mock<ChangeRepository> {
-            on { findById("£2") } doReturn Optional.of(Change("£2", 45))
-            on { findById("£1") } doReturn Optional.of(Change("£1", 0))
-            on { findById("50p") } doReturn Optional.of(Change("50p", 0))
-            on { findById("20p") } doReturn Optional.of(Change("20p", 0))
-            on { findById("10p") } doReturn Optional.of(Change("10p", 0))
-            on { findById("5p") } doReturn Optional.of(Change("5p", 0))
-            on { findById("2p") } doReturn Optional.of(Change("2p", 0))
-            on { findById("1p") } doReturn Optional.of(Change("1p", 0))
-        }
-
-        val changeService = ChangeService(changeRepository)
-
-        assertThrows<MissingChangeException> { changeService.calculateChange(100.00) }
-    }
-
-    @Test
     fun `calculateChange for negative infinity`() {
         val changeService = ChangeService(mock<ChangeRepository>())
 
@@ -185,6 +167,24 @@ class ChangeServiceTest {
         val changeService = ChangeService(changeRepository)
 
         assertThrows<MissingChangeException> { changeService.calculateChange(Double.POSITIVE_INFINITY) }
+    }
+
+    @Test
+    fun `calculateChange throws an exception if there isn't enough change`() {
+        val changeRepository = mock<ChangeRepository> {
+            on { findById("£2") } doReturn Optional.of(Change("£2", 45))
+            on { findById("£1") } doReturn Optional.of(Change("£1", 0))
+            on { findById("50p") } doReturn Optional.of(Change("50p", 0))
+            on { findById("20p") } doReturn Optional.of(Change("20p", 0))
+            on { findById("10p") } doReturn Optional.of(Change("10p", 0))
+            on { findById("5p") } doReturn Optional.of(Change("5p", 0))
+            on { findById("2p") } doReturn Optional.of(Change("2p", 0))
+            on { findById("1p") } doReturn Optional.of(Change("1p", 0))
+        }
+
+        val changeService = ChangeService(changeRepository)
+
+        assertThrows<MissingChangeException> { changeService.calculateChange(100.00) }
     }
 
     private fun emptyChange(): List<Change> {
