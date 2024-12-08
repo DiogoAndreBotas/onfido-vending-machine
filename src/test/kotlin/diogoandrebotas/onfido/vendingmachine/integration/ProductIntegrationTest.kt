@@ -4,7 +4,7 @@ import diogoandrebotas.onfido.vendingmachine.model.CoinAndQuantity
 import diogoandrebotas.onfido.vendingmachine.model.Product
 import diogoandrebotas.onfido.vendingmachine.model.http.ErrorResponseBody
 import diogoandrebotas.onfido.vendingmachine.model.http.ProductPurchaseResponseBody
-import diogoandrebotas.onfido.vendingmachine.model.http.PurchaseRequestBody
+import diogoandrebotas.onfido.vendingmachine.model.http.ProductPurchaseRequestBody
 import diogoandrebotas.onfido.vendingmachine.repository.ProductRepository
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -114,7 +114,7 @@ class ProductIntegrationTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         Json.encodeToString(
-                            value = PurchaseRequestBody(
+                            value = ProductPurchaseRequestBody(
                                 listOf(CoinAndQuantity("£2", 4))
                             )
                         )
@@ -146,7 +146,7 @@ class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     Json.encodeToString(
-                        value = PurchaseRequestBody(
+                        value = ProductPurchaseRequestBody(
                             listOf(CoinAndQuantity("£1", 1))
                         )
                     )
@@ -178,7 +178,7 @@ class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     Json.encodeToString(
-                        value = PurchaseRequestBody(
+                        value = ProductPurchaseRequestBody(
                             listOf(CoinAndQuantity("£2", 1))
                         )
                     )
@@ -213,7 +213,7 @@ class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     Json.encodeToString(
-                        value = PurchaseRequestBody(
+                        value = ProductPurchaseRequestBody(
                             listOf(
                                 CoinAndQuantity("£1", 1),
                                 CoinAndQuantity("50p", 1),
@@ -251,7 +251,7 @@ class ProductIntegrationTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         Json.encodeToString(
-                            value = PurchaseRequestBody(
+                            value = ProductPurchaseRequestBody(
                                 listOf(CoinAndQuantity("£2", 500))
                             )
                         )
@@ -278,7 +278,7 @@ class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     Json.encodeToString(
-                        value = PurchaseRequestBody(
+                        value = ProductPurchaseRequestBody(
                             listOf(CoinAndQuantity("£5", 1))
                         )
                     )
@@ -305,7 +305,7 @@ class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     Json.encodeToString(
-                        value = PurchaseRequestBody(
+                        value = ProductPurchaseRequestBody(
                             listOf(CoinAndQuantity("1p", 1))
                         )
                     )
@@ -339,7 +339,7 @@ class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     Json.encodeToString(
-                        value = PurchaseRequestBody(
+                        value = ProductPurchaseRequestBody(
                             listOf(CoinAndQuantity("£2", 5))
                         )
                     )

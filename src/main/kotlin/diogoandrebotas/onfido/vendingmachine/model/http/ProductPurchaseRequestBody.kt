@@ -4,6 +4,6 @@ import diogoandrebotas.onfido.vendingmachine.model.CoinAndQuantity
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PurchaseRequestBody(
+data class ProductPurchaseRequestBody(
     val coins: List<CoinAndQuantity>
 )

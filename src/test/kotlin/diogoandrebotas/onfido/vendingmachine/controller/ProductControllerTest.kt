@@ -3,7 +3,7 @@ package diogoandrebotas.onfido.vendingmachine.controller
 import diogoandrebotas.onfido.vendingmachine.model.CoinAndQuantity
 import diogoandrebotas.onfido.vendingmachine.model.Product
 import diogoandrebotas.onfido.vendingmachine.model.ProductAndChange
-import diogoandrebotas.onfido.vendingmachine.model.http.PurchaseRequestBody
+import diogoandrebotas.onfido.vendingmachine.model.http.ProductPurchaseRequestBody
 import diogoandrebotas.onfido.vendingmachine.service.ProductService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -78,7 +78,7 @@ class ProductControllerTest {
             )
         }
 
-        val result = ProductController(productService).purchaseProduct(1, PurchaseRequestBody(coinQuantities))
+        val result = ProductController(productService).purchaseProduct(1, ProductPurchaseRequestBody(coinQuantities))
 
         val expectedResult = Pair(
             Product(
