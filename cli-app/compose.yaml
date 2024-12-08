@@ -1,0 +1,12 @@
+services:
+  cli:
+    build:
+      context: .
+      target: build
+    volumes:
+      - .:/cli
+    command: /cli/gradlew bootRun --console=plain
+    ports:
+      - "8081:8081"
+    stdin_open: true
+    tty: true
