@@ -1,26 +1,26 @@
 # Vending Machine
 
-The implementation of the vending machine is a REST API that exposes several endpoints that can be called to interact with the machine.
+The implementation of the vending machine is a REST API that exposes several endpoints that can be called to interact with the machine, and a Command-line Interface application which acts as the frontend of the machine.
 
 ## Running the Machine Locally
 
-### Docker
-
+Run the REST API:
 - Install Docker Desktop
 - Clone the repository
-- Run `docker-compose up web_api` in the terminal, inside the repository's directory
+- Open the terminal
+- Run `cd web-api`
+- Run `docker-compose up web_api`
 - The REST API should now be accessible in http://localhost:8080
 
-### IntelliJ IDEA
-
-- Install IntelliJ IDEA and PostgreSQL
-- Clone the repository
-- Open the folder using IntelliJ IDEA
-- Run [VendingMachineApplication.kt](/src/main/kotlin/diogoandrebotas/onfido/vendingmachine/VendingMachineApplication.kt)
-- The REST API should now be accessible in http://localhost:8080
+(bonus) Run the CLI app:
+- Open another terminal (in the root repository folder)
+- Run `cd cli-app`
+- Run `docker-compose run cli`
+- Interact with the CLI app!
 
 ## Technologies Used
 
+- [IntelliJ IDEA](https://www.jetbrains.com/idea/) as the IDE.
 - [Kotlin](https://kotlinlang.org/) + [Spring Boot](https://spring.io/projects/spring-boot) for developing the REST API and the CLI app. Kotlin is the programming language I enjoy coding on the most, and Spring Boot is a framework for developing applications that is both developer friendly and highly customizable. In terms of out of the box support for concurrent access in the REST API, by default, Spring provides an embedded Apache Tomcat build (a web server and servlet container) that has a default thread count of 200.
 - [PostgreSQL](https://www.postgresql.org/) as the DBMS. I chose a relational database given that this is a system whose data is structured, and PostgreSQL is well-supported in Spring Boot (using Spring JPA), and ACID-compliant.
 - [JUnit](https://junit.org/junit5/) as the testing framework.
@@ -50,7 +50,7 @@ Unit and integration tests run everytime a commit is pushed to a branch. In this
 
 ### Manual Testing
 
-- A test coverage report was generated using [Kover](https://github.com/Kotlin/kotlinx-kover). It's available [here](/resources/kover_report.html) (download the file and open it on a browser).
+- A test coverage report was generated using [Kover](https://github.com/Kotlin/kotlinx-kover). It's available [here](/resources/kover_report.html) (download the file and open it on a browser). Kover could be integrated into the CI pipeline, failing it if the test coverage falls below a certain level.
 - A Postman collection is available [here](/resources/postman_collection.json). You can import it and test the API manually.
 
 ## Architecture Diagram
@@ -68,8 +68,7 @@ Unit and integration tests run everytime a commit is pushed to a branch. In this
 
 ## Future Work
 
-- Develop a Command Line Interface application to interact with the Vending Machine's REST API
-- Improve Big O query times by adding a caching mechanism
+- Add error handling to the CLI app
 - Hosting the services on a cloud provider
 - Logging and Metrics (e.g. NewRelic, Datadog)
 - Error Reporting (e.g. Bugsnag)
