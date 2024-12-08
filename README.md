@@ -5,9 +5,9 @@ The implementation of the vending machine is a REST API that exposes several end
 ## Running the Machine Locally
 
 Run the REST API:
-- Install Docker Desktop
+- Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - Clone the repository
-- Open the terminal
+- Open the terminal (in the root repository folder)
 - Run `cd web-api`
 - Run `docker-compose up web_api`
 - The REST API should now be accessible in http://localhost:8080
@@ -68,7 +68,7 @@ Unit and integration tests run everytime a commit is pushed to a branch. In this
 
 ## Future Work
 
-- Add error handling to the CLI app
-- Hosting the services on a cloud provider
-- Logging and Metrics (e.g. NewRelic, Datadog)
-- Error Reporting (e.g. Bugsnag)
+- Add error handling and tests to the CLI app
+- Host the services in a cloud provider (e.g. AWS, GCP)
+- Introduce logging and metrics (e.g. NewRelic, Datadog)
+- Add error reporting (e.g. Bugsnag)
