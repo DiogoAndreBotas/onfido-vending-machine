@@ -50,13 +50,10 @@ Unit and integration tests run everytime a commit is pushed to a branch. In this
 
 ### Manual Testing
 
-A Postman collection is available [here](Vending%20Machine.postman_collection.json). You can import it and test the API manually.
+- A test coverage report was generated using [Kover](https://github.com/Kotlin/kotlinx-kover). It's available [here](/resources/kover_report.html).
+- A Postman collection is available [here](/resources/postman_collection.json). You can import it and test the API manually.
 
-## Bonuses
-
-TBD
-
-### Architecture Diagram
+## Architecture Diagram
 
 ![Architecture Diagram](/resources/architecture_diagram.drawio.png)
 

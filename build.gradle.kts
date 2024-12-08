@@ -4,12 +4,14 @@ plugins {
 	val kotlinSerializationPluginVersion = "2.0.20"
 	val springBootPluginVersion = "3.4.0"
 	val springDependencyManagementPluginVersion = "1.1.6"
+	val koverGradlePluginVersion = "0.9.0-RC"
 
 	kotlin("jvm") version kotlinJvmPluginVersion
 	kotlin("plugin.spring") version kotlinSpringPluginVersion
 	kotlin("plugin.serialization") version kotlinSerializationPluginVersion
 	id("org.springframework.boot") version springBootPluginVersion
 	id("io.spring.dependency-management") version springDependencyManagementPluginVersion
+	id("org.jetbrains.kotlinx.kover") version koverGradlePluginVersion
 }
 
 group = "diogoandrebotas.onfido"
@@ -28,6 +30,7 @@ val springBootVersion = "3.4.0"
 val postgresqlVersion = "42.7.4"
 val kotlinReflectVersion = "2.1.0"
 val kotlinxSerializationJsonVersion = "1.7.3"
+val koverGradlePluginVersion = "0.8.3"
 val kotlinTestJUnitJupiterVersion = "2.1.0"
 val junitJupiterApiVersion = "5.11.3"
 val mockitoVersion = "5.14.2"
@@ -42,6 +45,7 @@ dependencies {
 	implementation("org.postgresql:postgresql:$postgresqlVersion")
 	implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinReflectVersion")
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationJsonVersion")
+	implementation("org.jetbrains.kotlinx:kover-gradle-plugin:$koverGradlePluginVersion")
 	testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:$kotlinTestJUnitJupiterVersion")
 	testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterApiVersion")
