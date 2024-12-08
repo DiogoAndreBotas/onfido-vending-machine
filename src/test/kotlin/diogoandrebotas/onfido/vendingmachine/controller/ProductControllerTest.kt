@@ -1,6 +1,6 @@
 package diogoandrebotas.onfido.vendingmachine.controller
 
-import diogoandrebotas.onfido.vendingmachine.model.CoinQuantity
+import diogoandrebotas.onfido.vendingmachine.model.CoinAndQuantity
 import diogoandrebotas.onfido.vendingmachine.model.Product
 import diogoandrebotas.onfido.vendingmachine.model.ProductAndChange
 import diogoandrebotas.onfido.vendingmachine.model.http.PurchaseRequestBody
@@ -63,7 +63,7 @@ class ProductControllerTest {
 
     @Test
     fun `purchaseProduct returns the product and the change`() {
-        val coinQuantities = listOf(CoinQuantity("£2", 2), CoinQuantity("50p", 1))
+        val coinQuantities = listOf(CoinAndQuantity("£2", 2), CoinAndQuantity("50p", 1))
         val productService = mock<ProductService> {
             on { purchaseProduct(1, coinQuantities) } doReturn ProductAndChange(
                 Product(
@@ -72,8 +72,8 @@ class ProductControllerTest {
                     availableQuantity = 10
                 ),
                 listOf(
-                    CoinQuantity("£2", 1),
-                    CoinQuantity("50p", 1)
+                    CoinAndQuantity("£2", 1),
+                    CoinAndQuantity("50p", 1)
                 )
             )
         }
@@ -87,8 +87,8 @@ class ProductControllerTest {
                 availableQuantity = 10
             ),
             listOf(
-                CoinQuantity("£2", 1),
-                CoinQuantity("50p", 1)
+                CoinAndQuantity("£2", 1),
+                CoinAndQuantity("50p", 1)
             )
         )
 

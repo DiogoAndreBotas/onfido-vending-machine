@@ -1,6 +1,6 @@
 package diogoandrebotas.onfido.vendingmachine.integration
 
-import diogoandrebotas.onfido.vendingmachine.model.CoinQuantity
+import diogoandrebotas.onfido.vendingmachine.model.CoinAndQuantity
 import diogoandrebotas.onfido.vendingmachine.model.Product
 import diogoandrebotas.onfido.vendingmachine.model.http.ErrorResponseBody
 import diogoandrebotas.onfido.vendingmachine.model.http.ProductPurchaseResponseBody
@@ -115,7 +115,7 @@ class ProductIntegrationTest {
                     .content(
                         Json.encodeToString(
                             value = PurchaseRequestBody(
-                                listOf(CoinQuantity("£2", 4))
+                                listOf(CoinAndQuantity("£2", 4))
                             )
                         )
                     )
@@ -132,7 +132,7 @@ class ProductIntegrationTest {
                 price = "£2",
                 availableQuantity = 9
             ),
-            listOf(CoinQuantity("£2", 3))
+            listOf(CoinAndQuantity("£2", 3))
         )
 
         assertEquals(expectedResponseBody, responseBody)
@@ -147,11 +147,11 @@ class ProductIntegrationTest {
                 .content(
                     Json.encodeToString(
                         value = PurchaseRequestBody(
-                            listOf(CoinQuantity("£1", 1))
+                            listOf(CoinAndQuantity("£1", 1))
                         )
                     )
                 )
-        )
+            )
             .andExpect(status().isOk)
             .andReturn().response.contentAsString
 
@@ -164,7 +164,7 @@ class ProductIntegrationTest {
                 price = "99p",
                 availableQuantity = 9
             ),
-            listOf(CoinQuantity("1p", 1))
+            listOf(CoinAndQuantity("1p", 1))
         )
 
         assertEquals(expectedResponseBody, responseBody)
@@ -179,11 +179,11 @@ class ProductIntegrationTest {
                 .content(
                     Json.encodeToString(
                         value = PurchaseRequestBody(
-                            listOf(CoinQuantity("£2", 1))
+                            listOf(CoinAndQuantity("£2", 1))
                         )
                     )
                 )
-        )
+            )
             .andExpect(status().isOk)
             .andReturn().response.contentAsString
 
@@ -197,8 +197,8 @@ class ProductIntegrationTest {
                 availableQuantity = 9
             ),
             listOf(
-                CoinQuantity("10p", 1),
-                CoinQuantity("5p", 1)
+                CoinAndQuantity("10p", 1),
+                CoinAndQuantity("5p", 1)
             )
         )
 
@@ -215,16 +215,16 @@ class ProductIntegrationTest {
                     Json.encodeToString(
                         value = PurchaseRequestBody(
                             listOf(
-                                CoinQuantity("£1", 1),
-                                CoinQuantity("50p", 1),
-                                CoinQuantity("20p", 1),
-                                CoinQuantity("10p", 1),
-                                CoinQuantity("5p", 1),
+                                CoinAndQuantity("£1", 1),
+                                CoinAndQuantity("50p", 1),
+                                CoinAndQuantity("20p", 1),
+                                CoinAndQuantity("10p", 1),
+                                CoinAndQuantity("5p", 1),
                             )
                         )
                     )
                 )
-        )
+            )
             .andExpect(status().isOk)
             .andReturn().response.contentAsString
 
@@ -252,7 +252,7 @@ class ProductIntegrationTest {
                     .content(
                         Json.encodeToString(
                             value = PurchaseRequestBody(
-                                listOf(CoinQuantity("£2", 500))
+                                listOf(CoinAndQuantity("£2", 500))
                             )
                         )
                     )
@@ -279,11 +279,11 @@ class ProductIntegrationTest {
                 .content(
                     Json.encodeToString(
                         value = PurchaseRequestBody(
-                            listOf(CoinQuantity("£5", 1))
+                            listOf(CoinAndQuantity("£5", 1))
                         )
                     )
                 )
-        )
+            )
             .andExpect(status().isBadRequest)
             .andReturn().response.contentAsString
 
@@ -306,11 +306,11 @@ class ProductIntegrationTest {
                 .content(
                     Json.encodeToString(
                         value = PurchaseRequestBody(
-                            listOf(CoinQuantity("1p", 1))
+                            listOf(CoinAndQuantity("1p", 1))
                         )
                     )
                 )
-        )
+            )
             .andExpect(status().isBadRequest)
             .andReturn().response.contentAsString
 
@@ -340,11 +340,11 @@ class ProductIntegrationTest {
                 .content(
                     Json.encodeToString(
                         value = PurchaseRequestBody(
-                            listOf(CoinQuantity("£2", 5))
+                            listOf(CoinAndQuantity("£2", 5))
                         )
                     )
                 )
-        )
+            )
             .andExpect(status().isConflict)
             .andReturn().response.contentAsString
 

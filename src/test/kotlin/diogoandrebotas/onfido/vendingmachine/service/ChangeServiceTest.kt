@@ -3,7 +3,7 @@ package diogoandrebotas.onfido.vendingmachine.service
 import diogoandrebotas.onfido.vendingmachine.exception.MissingChangeException
 import diogoandrebotas.onfido.vendingmachine.exception.NoChangeForNegativeValuesException
 import diogoandrebotas.onfido.vendingmachine.model.Change
-import diogoandrebotas.onfido.vendingmachine.model.CoinQuantity
+import diogoandrebotas.onfido.vendingmachine.model.CoinAndQuantity
 import diogoandrebotas.onfido.vendingmachine.repository.ChangeRepository
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -78,14 +78,14 @@ class ChangeServiceTest {
         val change = ChangeService(changeRepository).calculateChange(10.00)
 
         val expectedChange = listOf(
-            CoinQuantity("£2", 1),
-            CoinQuantity("£1", 2),
-            CoinQuantity("50p", 2),
-            CoinQuantity("20p", 5),
-            CoinQuantity("10p", 10),
-            CoinQuantity("5p", 20),
-            CoinQuantity("2p", 50),
-            CoinQuantity("1p", 100),
+            CoinAndQuantity("£2", 1),
+            CoinAndQuantity("£1", 2),
+            CoinAndQuantity("50p", 2),
+            CoinAndQuantity("20p", 5),
+            CoinAndQuantity("10p", 10),
+            CoinAndQuantity("5p", 20),
+            CoinAndQuantity("2p", 50),
+            CoinAndQuantity("1p", 100),
         )
 
         assertEquals(expectedChange, change)
@@ -109,10 +109,10 @@ class ChangeServiceTest {
         val change = ChangeService(changeRepository).calculateChange(0.99)
 
         val expectedChange = listOf(
-            CoinQuantity("50p", 1),
-            CoinQuantity("20p", 2),
-            CoinQuantity("5p", 1),
-            CoinQuantity("2p", 2)
+            CoinAndQuantity("50p", 1),
+            CoinAndQuantity("20p", 2),
+            CoinAndQuantity("5p", 1),
+            CoinAndQuantity("2p", 2)
         )
 
         assertEquals(expectedChange, change)
@@ -144,14 +144,14 @@ class ChangeServiceTest {
         val change = ChangeService(changeRepository).calculateChange(99.85)
 
         val expectedChange = listOf(
-            CoinQuantity("£2", 45),
-            CoinQuantity("£1", 4),
-            CoinQuantity("50p", 2),
-            CoinQuantity("20p", 5),
-            CoinQuantity("10p", 10),
-            CoinQuantity("5p", 20),
-            CoinQuantity("2p", 50),
-            CoinQuantity("1p", 85),
+            CoinAndQuantity("£2", 45),
+            CoinAndQuantity("£1", 4),
+            CoinAndQuantity("50p", 2),
+            CoinAndQuantity("20p", 5),
+            CoinAndQuantity("10p", 10),
+            CoinAndQuantity("5p", 20),
+            CoinAndQuantity("2p", 50),
+            CoinAndQuantity("1p", 85),
         )
 
         assertEquals(expectedChange, change)
@@ -161,7 +161,7 @@ class ChangeServiceTest {
     fun `calculateChange calculates the change for zero`() {
         val change = ChangeService(mock<ChangeRepository>()).calculateChange(0.00)
 
-        val expectedChange = emptyList<CoinQuantity>()
+        val expectedChange = emptyList<CoinAndQuantity>()
 
         assertEquals(expectedChange, change)
     }

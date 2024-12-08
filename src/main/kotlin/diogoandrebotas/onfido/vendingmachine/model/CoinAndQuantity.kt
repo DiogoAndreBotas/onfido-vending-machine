@@ -3,7 +3,7 @@ package diogoandrebotas.onfido.vendingmachine.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CoinQuantity(
+data class CoinAndQuantity(
     val coin: String,
     val quantity: Int
 )

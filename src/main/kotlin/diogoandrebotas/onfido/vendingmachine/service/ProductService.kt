@@ -5,7 +5,7 @@ import diogoandrebotas.onfido.vendingmachine.exception.ProductNotFoundException
 import diogoandrebotas.onfido.vendingmachine.exception.ProductOutOfStockException
 import diogoandrebotas.onfido.vendingmachine.exception.CoinNotAcceptedException
 import diogoandrebotas.onfido.vendingmachine.model.Coin
-import diogoandrebotas.onfido.vendingmachine.model.CoinQuantity
+import diogoandrebotas.onfido.vendingmachine.model.CoinAndQuantity
 import diogoandrebotas.onfido.vendingmachine.model.Product
 import diogoandrebotas.onfido.vendingmachine.model.ProductAndChange
 import diogoandrebotas.onfido.vendingmachine.repository.ProductRepository
@@ -23,7 +23,7 @@ class ProductService(
 
     fun getProduct(id: Long): Product = productRepository.findById(id).orElseThrow { ProductNotFoundException(id) }
 
-    fun purchaseProduct(id: Long, coinQuantities: List<CoinQuantity>): ProductAndChange {
+    fun purchaseProduct(id: Long, coinQuantities: List<CoinAndQuantity>): ProductAndChange {
         validateCoins(coinQuantities.map { it.coin })
 
         val product = getProduct(id)
@@ -56,11 +56,12 @@ class ProductService(
     }
 
     fun resetProductQuantities(): List<Product> {
-        val productsToUpdate = productRepository.findAll()
-
-        productsToUpdate.forEach { it.availableQuantity = 10 }
-
-        return productRepository.saveAll(productsToUpdate)
+        return productRepository.saveAll(
+            productRepository.findAll().map {
+                it.availableQuantity = 10
+                it
+            }
+        )
     }
 
     private fun validateCoins(coins: List<String>) {
@@ -87,5 +88,4 @@ class ProductService(
     }
 
     private fun formatPrice(price: Double) = if (price >= 1) "£$price" else "${price.times(100).toInt()}p"
-
 }

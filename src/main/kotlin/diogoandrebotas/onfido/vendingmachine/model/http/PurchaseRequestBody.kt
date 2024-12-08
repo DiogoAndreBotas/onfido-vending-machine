@@ -1,9 +1,9 @@
 package diogoandrebotas.onfido.vendingmachine.model.http
 
-import diogoandrebotas.onfido.vendingmachine.model.CoinQuantity
+import diogoandrebotas.onfido.vendingmachine.model.CoinAndQuantity
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class PurchaseRequestBody(
-    val coins: List<CoinQuantity>
+    val coins: List<CoinAndQuantity>
 )

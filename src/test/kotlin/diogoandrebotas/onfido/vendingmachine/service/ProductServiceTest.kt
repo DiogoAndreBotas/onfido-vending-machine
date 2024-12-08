@@ -4,7 +4,7 @@ import diogoandrebotas.onfido.vendingmachine.exception.CoinNotAcceptedException
 import diogoandrebotas.onfido.vendingmachine.exception.NotEnoughMoneyProvidedException
 import diogoandrebotas.onfido.vendingmachine.exception.ProductNotFoundException
 import diogoandrebotas.onfido.vendingmachine.exception.ProductOutOfStockException
-import diogoandrebotas.onfido.vendingmachine.model.CoinQuantity
+import diogoandrebotas.onfido.vendingmachine.model.CoinAndQuantity
 import diogoandrebotas.onfido.vendingmachine.model.Product
 import diogoandrebotas.onfido.vendingmachine.repository.ProductRepository
 import org.junit.jupiter.api.Test
@@ -95,17 +95,17 @@ class ProductServiceTest {
         }
         val changeService = mock<ChangeService> {
             on { calculateChange(change) } doReturn listOf(
-                CoinQuantity("£2", 1),
-                CoinQuantity("£1", 1),
-                CoinQuantity("1p", 1)
+                CoinAndQuantity("£2", 1),
+                CoinAndQuantity("£1", 1),
+                CoinAndQuantity("1p", 1)
             )
         }
 
         val productAndChange = ProductService(productRepository, changeService).purchaseProduct(
             id = 1,
             coinQuantities = listOf(
-                CoinQuantity("£2", 2),
-                CoinQuantity("50p", 2)
+                CoinAndQuantity("£2", 2),
+                CoinAndQuantity("50p", 2)
             )
         )
 
@@ -115,9 +115,9 @@ class ProductServiceTest {
             availableQuantity = 9
         )
         val expectedChange = listOf(
-            CoinQuantity("£2", 1),
-            CoinQuantity("£1", 1),
-            CoinQuantity("1p", 1)
+            CoinAndQuantity("£2", 1),
+            CoinAndQuantity("£1", 1),
+            CoinAndQuantity("1p", 1)
         )
 
         assertEquals(expectedProduct, productAndChange.product)
@@ -132,8 +132,8 @@ class ProductServiceTest {
             productService.purchaseProduct(
                 id = 1,
                 coinQuantities = listOf(
-                    CoinQuantity("£5", 2),
-                    CoinQuantity("50p", 2)
+                    CoinAndQuantity("£5", 2),
+                    CoinAndQuantity("50p", 2)
                 )
             )
         }
@@ -149,8 +149,8 @@ class ProductServiceTest {
             ProductService(productRepository, mock<ChangeService>()).purchaseProduct(
                 id = 1,
                 coinQuantities = listOf(
-                    CoinQuantity("£2", 2),
-                    CoinQuantity("50p", 2)
+                    CoinAndQuantity("£2", 2),
+                    CoinAndQuantity("50p", 2)
                 )
             )
         }
@@ -171,8 +171,8 @@ class ProductServiceTest {
             ProductService(productRepository, mock<ChangeService>()).purchaseProduct(
                 id = 1,
                 coinQuantities = listOf(
-                    CoinQuantity("£2", 2),
-                    CoinQuantity("50p", 2)
+                    CoinAndQuantity("£2", 2),
+                    CoinAndQuantity("50p", 2)
                 )
             )
         }
@@ -195,7 +195,7 @@ class ProductServiceTest {
             productService.purchaseProduct(
                 id = 1,
                 coinQuantities = listOf(
-                    CoinQuantity("£1", 1)
+                    CoinAndQuantity("£1", 1)
                 )
             )
         }
