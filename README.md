@@ -1,6 +1,6 @@
 # Vending Machine
 
-This vending machine is a public REST API that exposes several endpoints, which can be called in order to interact with the machine.
+The implementation of the vending machine is a REST API that exposes several endpoints that can be called to interact with the machine.
 
 ## Running the Machine Locally
 
@@ -21,10 +21,10 @@ This vending machine is a public REST API that exposes several endpoints, which 
 
 ## Technologies Used
 
-- **[Kotlin](https://kotlinlang.org/) + [Spring Boot](https://spring.io/projects/spring-boot)** for developing the REST API and the CLI app. Kotlin is the programming language I enjoy coding on the most, and Spring Boot is a framework for developing applications that is both developer friendly and highly customizable. In terms of out of the box support for concurrent access in the REST API, by default, Spring provides an embedded Apache Tomcat build (a web server and servlet container) that has a default thread count of 200.
-- **[PostgreSQL](https://www.postgresql.org/)** as the DBMS. I chose a relational database given that this is a system whose data is structured, and PostgreSQL is well-supported in Spring Boot (using Spring JPA), and ACID-compliant.
-- **[JUnit](https://junit.org/junit5/)** as the testing framework.
-- **[Mockito](https://site.mockito.org/)** as the mocking framework.
+- [Kotlin](https://kotlinlang.org/) + [Spring Boot](https://spring.io/projects/spring-boot) for developing the REST API and the CLI app. Kotlin is the programming language I enjoy coding on the most, and Spring Boot is a framework for developing applications that is both developer friendly and highly customizable. In terms of out of the box support for concurrent access in the REST API, by default, Spring provides an embedded Apache Tomcat build (a web server and servlet container) that has a default thread count of 200.
+- [PostgreSQL](https://www.postgresql.org/) as the DBMS. I chose a relational database given that this is a system whose data is structured, and PostgreSQL is well-supported in Spring Boot (using Spring JPA), and ACID-compliant.
+- [JUnit](https://junit.org/junit5/) as the testing framework.
+- [Mockito](https://site.mockito.org/) as the mocking framework.
 
 ## Requirements
 
@@ -35,12 +35,12 @@ The requirements for the vending machine's features are the following:
 - The machine should keep the state of products and change that it contains up to date.
 
 In order to meet the requirements, a REST API was developed with the following endpoints:
-- `GET /products`: retrieve all available products
-- `GET /products/{id}`: retrieve a product identified by ID
-- `POST /products/{id}/purchase`: returns the purchased product and the change in coins
-- `POST /products/reset`: restore the available quantity for all products
-- `GET /change`: retrieve the coins and their amount
-- `POST /change/reset`: restore the amount of coins to their initial values
+- `GET /products`: retrieve all available products.
+- `GET /products/{id}`: retrieve a product identified by ID.
+- `POST /products/{id}/purchase`: returns the purchased product and the change in coins.
+- `POST /products/reset`: restore the available quantity for all products.
+- `GET /change`: retrieve the coins and their amount.
+- `POST /change/reset`: restore the amount of coins to their initial values.
 
 ## Testing
 
@@ -50,7 +50,7 @@ Unit and integration tests run everytime a commit is pushed to a branch. In this
 
 ### Manual Testing
 
-- A test coverage report was generated using [Kover](https://github.com/Kotlin/kotlinx-kover). It's available [here](/resources/kover_report.html).
+- A test coverage report was generated using [Kover](https://github.com/Kotlin/kotlinx-kover). It's available [here](/resources/kover_report.html) (download the file and open it on a browser).
 - A Postman collection is available [here](/resources/postman_collection.json). You can import it and test the API manually.
 
 ## Architecture Diagram
@@ -59,20 +59,17 @@ Unit and integration tests run everytime a commit is pushed to a branch. In this
 
 ## Big O Complexity of Algorithms
 
-The most complex business logic present in the project is the calculation of the change after a product is purchased.
-
-In relation to the other operations, their time and space complexity are the following:
-- `GET /products`: **O(n)** time and space complexity, n being the number of products
+- `GET /products`: **O(n)** time and space complexity, n being the number of products.
 - `GET /products/{id}`: **O(1)** space complexity, **O(logn)** time complexity, as an index will be used for searching the product. In PostgreSQL, an index for the primary key column is automatically created.
-- `POST /products/{id}/purchase`: **O(n)** time and space complexity, n being the number of unique coins
-- `POST /products/reset`: **O(n)** time and space complexity, n being the number of products
-- `GET /change`: **O(n)** time and space complexity, n being the number of coins
-- `POST /change/reset`:  **O(n)** time and space complexity, n being the number of coins
+- `POST /products/{id}/purchase`: **O(n)** time and space complexity, n being the number of unique coins.
+- `POST /products/reset`: **O(n)** time and space complexity, n being the number of products.
+- `GET /change`: **O(n)** time and space complexity, n being the number of coins.
+- `POST /change/reset`:  **O(n)** time and space complexity, n being the number of coins.
 
 ## Future Work
 
+- Develop a Command Line Interface application to interact with the Vending Machine's REST API
 - Improve Big O query times by adding a caching mechanism
 - Hosting the services on a cloud provider
 - Logging and Metrics (e.g. NewRelic, Datadog)
 - Error Reporting (e.g. Bugsnag)
-- Building a frontend using React + TypeScript
